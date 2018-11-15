@@ -17,7 +17,7 @@ $(document).ready(function () {
     let destination = "";
     let firstTrainTime = "";
     let frequency = "";
-    let scheduleRowCounter = 0;
+    // let scheduleRowCounter = 0;
 
     $(document).on("click", ".btn", function (e) {
         e.preventDefault();
@@ -30,38 +30,29 @@ $(document).ready(function () {
 
         // console.log(trainName, destination, firstTrainTime, frequency);
 
-        database.ref().set({
+        database.ref().push({
             trainName: trainName,
             destination: destination,
             firstTrainTime: firstTrainTime,
-            freqency: frequency
+            frequency: frequency
         })
 
+        // $("#submitForm").find().empty();
     });
 
-    database.ref().on("value", function(snapshot){
+    database.ref().on("child_added", function(snapshot){
 
-        console.log(snapshot.val());
-        
-        let newRow = $("<div class=row></div>");
-        let newDivCol3 = $("<div class=col-3></div>");
-        let newDivCol4 = $("<div class=col-2></div>");
-        
-        $("#trainSchedule").append(newRow).attr("id", scheduleRowCounter);
+        console.log(snapshot.val().destination);
+        let trainNameDisplay = $("#trainNameDisplay");
+        let destinationDisplay = $("#destinationDisplay");
+        let frequencyDisplay = $("#frequencyDisplay");
+        let nextArrivalDisplay = $("#nextArrivalDisplay");
 
-        $("#"+scheduleRowCounter).append(newDivCol3.text(snapshot.val().trainName));
-        $("#"+scheduleRowCounter).append(newDivCol3.text(snapshot.val().destination));
-        $("#"+scheduleRowCounter).append(newDivCol2.text(snapshot.val().frequency));
-        $("#"+scheduleRowCounter).append(newDivCol2); //next arrival
-        $("#"+scheduleRowCounter).append(newDivCol2); //minutes away
+        trainNameDisplay.text(snapshot.val().trainName);
+        destinationDisplay.text(snapshot.val().destination);
+        frequencyDisplay.text(snapshot.val().frequency);
+        nextArrivalDisplay.text(snapshot.val().firstTrainTime);
 
-
-        scheduleRowCounter++;
-
-
-        // $("#trainNameDisplay").append(newDiv.text(snapshot.val().trainName));
-        // $("#destinationDisplay").append(newDiv.text(snapshot.val().destination));
-        // $("#frequencyDisplay").append(newDiv.text(snapshot.val().frequency));
         
     });
 
