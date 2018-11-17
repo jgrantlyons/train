@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.js"></script>
 </head>
 
 <body>
@@ -18,6 +19,7 @@
         <div class="container">
             <h1 class="display-4">Express Schedule</h1>
             <p class="lead">Check arrival and departure times for your train.</p>
+            <div id="clock"></div>
         </div>
     </div>
 
@@ -27,26 +29,38 @@
             <div class="card-header">Current Train Schedule</div>
             <div class="container card-body text-dark">
 
-                <div class="row">
-                    <div class="col-3">Train Name</div>
-                    <div class="col-3">Destination</div>
-                    <div class="col-2">Frequency(min)</div>
-                    <div class="col-2">Next Arrival</div>
-                    <div class="col-2">Minutes Away</div>
-                </div>
+               
+                <table class="table table-borderless table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Train Name</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Frequency(min)</th>
+                            <th scope="col">Next Arrival</th>
+                            <th scope="col">Minutes Away</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trainSchedule">
+                        
+                    </tbody>
+                </table>
 
-                <br>
-                <!-- empty divs for pushing data into -->
-                <div id="trainSchedule" class="row card-text">
-                    <div class="col-3" id="trainNameDisplay"></div>
-                    <div class="col-3" id="destinationDisplay"></div>
-                    <div class="col-2" id="frequencyDisplay"></div>
-                    <div class="col-2" id="nextArrivalDisplay"></div>
-                    <div class="col-2" id="minutesAwayDisplay"></div>
-                </div>
+
+
+
+
+
 
             </div>
         </div>
+        
+
+
+
+
+        <!-- remaking the new train schedule ^^^ -->
+
+
 
         <div class="card border-dark mb-3">
             <div class="card-header">Add Train</div>
@@ -85,7 +99,7 @@
         </div>
 
     </div>
-    <script src="javascript.js"></script>
+    <script src="script/javascript.js"></script>
 </body>
 
 </html>
