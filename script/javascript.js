@@ -19,14 +19,15 @@ $(document).ready(function () {
     let firstTrainTime = "";
     let frequency = "";
 
+    //user submit
     $(document).on("click", ".btn", function (e) {
         e.preventDefault();
         trainName = $("#trainNameInput").val().trim();
         destination = $("#destinationInput").val().trim();
         firstTrainTime = $("#firstTrainTimeInput").val();
-        firstTrainTime = parseInt(firstTrainTime);
+        // firstTrainTime = parseInt(firstTrainTime);
         frequency = $("#frequencyInput").val();
-        frequency = parseInt(frequency);
+        // frequency = parseInt(frequency);
 
         database.ref().push({
             trainName: trainName,
@@ -37,20 +38,47 @@ $(document).ready(function () {
 
     });
 
+    //function called once new user input added
     database.ref().on("child_added", function (snapshot) {
 
+        //variables
         let trainSchedule = $("#trainSchedule");
+
         let trainObject = {
             name: snapshot.val().trainName,
             destination: snapshot.val().destination,
-            frequency: snapshot.val().firstTrainName,
-            nextArrival: 0,
+            frequency: snapshot.val().frequency,
+            nextArrival: snapshot.val().firstTrainTime,
             minsAway: 0,
         }
+        //function that finds minutes away
+        function minutesAway() {
+            let newNextArrival = moment(trainObject.nextArrival, "h:mm").subtract(1, "years");
+            
+
+            //current time
+            var currentTime = moment();
+
+            //difference between the times
+            var diffTime = moment().diff(moment(newNextArrival), "minutes");
+
+            // Time apart (remainder)
+            var tFrequency = trainObject.frequency;
+            var tRemainder = diffTime % tFrequency;
+
+            // Minute Until Train
+            var tMinutesTillTrain = tFrequency - tRemainder;
+            trainObject.minsAway = tMinutesTillTrain;
+
+            // Next Train
+            var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+
+        }
+        minutesAway();
 
         // function to push data to row
         function pushData(data) {
-            
+
             let trainSchedule = $("#trainSchedule");
 
             let trainNameDisplay = $("<td></td>");
@@ -63,9 +91,13 @@ $(document).ready(function () {
 
 
             trainNameDisplay.text(trainObject.name);
+
             destinationDisplay.text(trainObject.destination);
+
             frequencyDisplay.text(trainObject.frequency);
+
             nextArrivalDisplay.text(trainObject.nextArrival);
+
             minutesAwayDisplay.text(trainObject.minsAway);
 
             trow.append(trainNameDisplay, destinationDisplay, frequencyDisplay, nextArrivalDisplay, minutesAwayDisplay);
@@ -75,28 +107,6 @@ $(document).ready(function () {
         }
         pushData(snapshot);
 
-
-
-
-
-
-
-
-
-
-
-
-        // let trainNameDisplay = $("#trainNameDisplay");
-        // let destinationDisplay = $("#destinationDisplay");
-        // let frequencyDisplay = $("#frequencyDisplay");
-        // let nextArrivalDisplay = $("#nextArrivalDisplay");
-
-
-
-
-        // trainNameDisplay.text(snapshot.val().trainName);
-        // destinationDisplay.text(snapshot.val().destination);
-        // frequencyDisplay.text(snapshot.val().frequency);
 
         // let nextArrival = moment(snapshot.val().firstTrainTime).format('h:mm a');
         // // console.log(nextArrival);
